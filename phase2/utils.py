@@ -1,10 +1,11 @@
+# phase2/utils.py
+
 import json
 import torch
 from torch.nn.utils.rnn import pad_sequence
-from trace_simulator.simulate_kernel_trace import process_trace
+from trace_simulator.simulate_kernel_trace import process_trace  # assumed implemented elsewhere
 
-
-# Define tokens
+# 🔡 Vocabulary Tokens
 LAYER_TOKENS = [
     "conv", "relu", "batchnorm", "tanh", "sigmoid", "fc",
     "softmax", "residual", "mobilenet", "pool", "<PAD>", "<EOS>"
@@ -17,54 +18,61 @@ PAD_IDX = TOKEN_TO_IDX["<PAD>"]
 EOS_IDX = TOKEN_TO_IDX["<EOS>"]
 VOCAB_SIZE = len(LAYER_TOKENS)
 
+
+# 🔒 Encode token sequence to index tensor
 def encode_sequence(layer_list, max_len=50):
-    """
-    layer_list: list of strings, e.g. ['conv', 'relu', 'pool']
-    Returns: tensor [max_len] of token IDs
-    """
     ids = [TOKEN_TO_IDX.get(layer, PAD_IDX) for layer in layer_list]
-    ids.append(EOS_IDX)
-    if len(ids) > max_len:
-        ids = ids[:max_len]
-    else:
-        ids += [PAD_IDX] * (max_len - len(ids))
+    ids.append(EOS_IDX)  # Append <EOS>
+    ids = ids[:max_len] + [PAD_IDX] * max(0, max_len - len(ids))  # Pad if needed
     return torch.tensor(ids, dtype=torch.long)
 
-def decode_sequence(id_tensor):
-    """
-    Converts list of token indices to string labels (excluding PAD and EOS).
-    Accepts list[int] or tensor.
-    """
-    return [IDX_TO_TOKEN[int(idx)] for idx in id_tensor if idx != PAD_IDX and idx != EOS_IDX]
 
+# 🔓 Decode tensor to list of tokens
+def decode_sequence(id_tensor):
+    result = []
+    for idx in id_tensor:
+        idx = int(idx)
+        if idx < 0 or idx >= VOCAB_SIZE:
+            continue
+        tok = IDX_TO_TOKEN[idx]
+        if tok == "<EOS>":
+            break
+        if tok != "<PAD>":
+            result.append(tok)
+    return result
+
+
+# 📁 Load model labels from json
 def load_labels(model_json_path, max_len=50):
-    """
-    Loads CNN model layers and converts them to token tensors.
-    Returns: tensor [N, max_len]
-    """
     with open(model_json_path) as f:
         models = json.load(f)
 
     encoded = []
-    for m in models:
-        layer_seq = [layer["type"].lower() for layer in m["layers"]]
-        encoded.append(encode_sequence(layer_seq, max_len))
+    for model in models:
+        if "layers" not in model:
+            continue
+        layer_seq = [layer["type"].lower() for layer in model["layers"] if "type" in layer]
+        encoded_seq = encode_sequence(layer_seq, max_len)
+        encoded.append(encoded_seq)
 
     return torch.stack(encoded)
 
+
+# 🧪 Load processed traces and labels
 def load_dataset(trace_path, model_path, max_len=50):
-    """
-    Loads kernel traces and model layers, returning padded tensors.
-    Returns: (X: [N, T, 4], Y: [N, max_len])
-    """
-    traces = json.load(open(trace_path))
-    models = json.load(open(model_path))
+    with open(trace_path) as f:
+        traces = json.load(f)
+    with open(model_path) as f:
+        models = json.load(f)
 
     X_list, Y_list = [], []
 
     for trace, model in zip(traces, models):
         xt = process_trace(trace)
-        yt = encode_sequence([layer["type"].lower() for layer in model["layers"]], max_len)
+        if "layers" not in model:
+            continue
+        layer_seq = [layer["type"].lower() for layer in model["layers"] if "type" in layer]
+        yt = encode_sequence(layer_seq, max_len)
 
         if xt is None or len(xt) == 0 or len(yt) == 0:
             continue
@@ -76,15 +84,3 @@ def load_dataset(trace_path, model_path, max_len=50):
     Y_pad = pad_sequence(Y_list, batch_first=True)
 
     return X_pad, Y_pad
-def process_trace(trace):
-    """
-    Converts a single trace (list of kernel events) to a tensor of shape [T, 4]
-    Each row: [op_type_id, start, end, duration]
-    """
-    result = []
-    for event in trace:
-        op = TOKEN_TO_IDX.get(event["op"].lower(), PAD_IDX)
-        if op == PAD_IDX: continue  # skip unknown ops
-        vec = [op, event["start_time"], event["end_time"], event["duration"]]
-        result.append(torch.tensor(vec, dtype=torch.float32))
-    return torch.stack(result) if result else None  
