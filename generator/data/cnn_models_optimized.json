@@ -1,109 +1,294 @@
 [
   {
+    "id": "model_01",
     "layers": [
       {
-        "type": "residual",
-        "in_channels": 64,
-        "out_channels": 32,
-        "kernel_size": 3
+        "type": "conv"
       },
       {
-        "type": "residual",
-        "in_channels": 64,
-        "out_channels": 128,
-        "kernel_size": 5
+        "type": "relu"
       },
       {
-        "type": "mobilenet",
-        "in_channels": 64,
-        "out_channels": 16,
-        "kernel_size": 5
+        "type": "pool"
       },
       {
-        "type": "tanh"
+        "type": "conv"
       },
       {
-        "type": "conv",
-        "in_channels": 16,
-        "out_channels": 16,
-        "kernel_size": 3
+        "type": "relu"
       },
       {
-        "type": "tanh"
+        "type": "pool"
       },
       {
-        "type": "residual",
-        "in_channels": 64,
-        "out_channels": 64,
-        "kernel_size": 5
+        "type": "flatten"
       },
       {
-        "type": "tanh"
+        "type": "fc"
       },
       {
-        "type": "residual",
-        "in_channels": 64,
-        "out_channels": 128,
-        "kernel_size": 3
-      },
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_02",
+    "layers": [
       {
-        "type": "mobilenet",
-        "in_channels": 3,
-        "out_channels": 64,
-        "kernel_size": 1
+        "type": "conv"
       },
       {
         "type": "batchnorm"
       },
       {
-        "type": "pool",
-        "kernel_size": 2
+        "type": "relu"
       },
       {
-        "type": "conv",
-        "in_channels": 32,
-        "out_channels": 32,
-        "kernel_size": 3
+        "type": "conv"
+      },
+      {
+        "type": "batchnorm"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "flatten"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_03",
+    "layers": [
+      {
+        "type": "conv"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_04",
+    "layers": [
+      {
+        "type": "conv"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "residual"
+      },
+      {
+        "type": "conv"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "residual"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_05",
+    "layers": [
+      {
+        "type": "mobilenet"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "flatten"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_06",
+    "layers": [
+      {
+        "type": "conv"
       },
       {
         "type": "tanh"
       },
       {
-        "type": "residual",
-        "in_channels": 64,
-        "out_channels": 64,
-        "kernel_size": 5
+        "type": "pool"
       },
       {
-        "type": "pool",
-        "kernel_size": 2
+        "type": "fc"
       },
       {
-        "type": "mobilenet",
-        "in_channels": 64,
-        "out_channels": 32,
-        "kernel_size": 5
+        "type": "sigmoid"
       },
       {
-        "type": "mobilenet",
-        "in_channels": 64,
-        "out_channels": 128,
-        "kernel_size": 5
+        "type": "fc"
       },
       {
-        "type": "conv",
-        "in_channels": 16,
-        "out_channels": 64,
-        "kernel_size": 3
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_07",
+    "layers": [
+      {
+        "type": "conv"
       },
       {
-        "type": "tanh"
+        "type": "relu"
       },
       {
-        "type": "conv",
-        "in_channels": 3,
-        "out_channels": 128,
-        "kernel_size": 5
+        "type": "dropout"
+      },
+      {
+        "type": "conv"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "dropout"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_08",
+    "layers": [
+      {
+        "type": "depthwise"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "flatten"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_09",
+    "layers": [
+      {
+        "type": "conv"
+      },
+      {
+        "type": "batchnorm"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "depthwise"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "flatten"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
+      }
+    ]
+  },
+  {
+    "id": "model_10",
+    "layers": [
+      {
+        "type": "conv"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "conv"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "pool"
+      },
+      {
+        "type": "conv"
+      },
+      {
+        "type": "relu"
+      },
+      {
+        "type": "fc"
+      },
+      {
+        "type": "softmax"
       }
     ]
   }

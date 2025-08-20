@@ -1,8 +1,4 @@
-# utils/evaluation.py
-
-import json
 import torch
-from torch.nn.utils.rnn import pad_sequence
 from sklearn.metrics import f1_score
 
 # 🔡 Token Definitions
@@ -18,31 +14,18 @@ PAD_IDX = TOKEN_TO_IDX["<PAD>"]
 EOS_IDX = TOKEN_TO_IDX["<EOS>"]
 VOCAB_SIZE = len(LAYER_TOKENS)
 
-
-# 🔒 Encode a list of tokens
-def encode_sequence(layer_list, max_len=50):
-    ids = [TOKEN_TO_IDX.get(layer, PAD_IDX) for layer in layer_list]
-    ids.append(EOS_IDX)
-    ids = ids[:max_len] + [PAD_IDX] * max(0, max_len - len(ids))
-    return torch.tensor(ids, dtype=torch.long)
-
-
 # 🔓 Decode a tensor of indices
 def decode_sequence(id_tensor):
     result = []
     for idx in id_tensor:
         idx = int(idx)
-        if idx < 0 or idx >= VOCAB_SIZE:
-            continue
-        tok = IDX_TO_TOKEN[idx]
-        if tok == "<EOS>":
+        if idx == EOS_IDX:
             break
-        if tok != "<PAD>":
-            result.append(tok)
+        if idx != PAD_IDX:
+            result.append(IDX_TO_TOKEN.get(idx, "<UNK>"))
     return result
 
-
-# 🧮 Edit Distance (Levenshtein)
+# 🧾 Edit Distance (Levenshtein)
 def edit_distance(seq1, seq2):
     m, n = len(seq1), len(seq2)
     dp = [[0] * (n + 1) for _ in range(m + 1)]
@@ -60,11 +43,9 @@ def edit_distance(seq1, seq2):
                     dp[i][j - 1],    # insertion
                     dp[i - 1][j - 1] # substitution
                 )
-
     return dp[m][n]
 
-
-# 📊 Evaluate LER and F1 Score
+# 📊 Evaluate Layer Error Rate (LER) and F1 Score
 def compute_metrics(predictions, targets):
     total_ler = 0.0
     total_f1 = []
@@ -77,17 +58,16 @@ def compute_metrics(predictions, targets):
         if not true:
             continue
 
-        # Calculate LER
         ler = edit_distance(pred, true) / max(1, len(true))
         total_ler += ler
 
-        # Calculate F1
-        min_len = min(len(pred), len(true))
-        if min_len == 0:
+        # F1 (micro-averaged on truncated match length)
+        match_len = min(len(pred), len(true))
+        if match_len == 0:
             continue
 
-        y_true = [TOKEN_TO_IDX.get(tok, PAD_IDX) for tok in true[:min_len]]
-        y_pred = [TOKEN_TO_IDX.get(tok, PAD_IDX) for tok in pred[:min_len]]
+        y_true = [TOKEN_TO_IDX.get(tok, PAD_IDX) for tok in true[:match_len]]
+        y_pred = [TOKEN_TO_IDX.get(tok, PAD_IDX) for tok in pred[:match_len]]
         f1 = f1_score(y_true, y_pred, average='micro', zero_division=0)
         total_f1.append(f1)
         count += 1

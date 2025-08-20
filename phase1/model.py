@@ -12,8 +12,10 @@ class MultiHeadSelfAttention(nn.Module):
 
     def forward(self, x):
         """
-        x: [B, T, D]
-        Returns: [B, T, D] with attention and residual normalization
+        Args:
+            x (torch.Tensor): Input tensor of shape [B, T, D]
+        Returns:
+            torch.Tensor: Output tensor of shape [B, T, D] with attention and residual normalization
         """
         attn_out, _ = self.attn(x, x, x)
         return self.norm(x + attn_out)
@@ -31,7 +33,7 @@ class Phase1Model(nn.Module):
         """
         super().__init__()
         self.embedding = nn.Linear(input_dim, lstm_hidden)  # 🔡 Project to LSTM space
-        
+
         self.lstm = nn.LSTM(
             input_size=lstm_hidden,
             hidden_size=lstm_hidden,
@@ -52,12 +54,12 @@ class Phase1Model(nn.Module):
     def forward(self, x):
         """
         Args:
-            x: [B, T, 4] - input trace tensor
+            x (torch.Tensor): Input tensor [B, T, 4] - kernel trace
         Returns:
-            [B, T, num_ops] - OPi embeddings (multi-label per event)
+            torch.Tensor: Output tensor [B, T, num_ops] - OPi embeddings
         """
-        x = self.embedding(x)              # [B, T, H]
-        x, _ = self.lstm(x)                # [B, T, 2H]
-        x = self.attn(x)                   # [B, T, 2H]
-        out = self.fcn(x)                  # [B, T, num_ops]
+        x = self.embedding(x)      # [B, T, H]
+        x, _ = self.lstm(x)        # [B, T, 2H]
+        x = self.attn(x)           # [B, T, 2H]
+        out = self.fcn(x)          # [B, T, num_ops]
         return out

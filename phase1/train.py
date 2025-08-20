@@ -27,9 +27,17 @@ def train_model(
 
     print("📦 Initializing model...")
     model = Phase1Model(input_dim=4, num_ops=NUM_OPS).to(device)
+
     criterion = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
+
+    # 🧪 Reproducibility
+    torch.manual_seed(42)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(42)
+
+    best_loss = float("inf")
 
     for epoch in range(num_epochs):
         model.train()
@@ -43,17 +51,22 @@ def train_model(
 
             optimizer.zero_grad()
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)  # 🔒 gradient clipping
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
 
             total_loss += loss.item()
 
-        scheduler.step()  # 🔄 reduce LR
+        scheduler.step()
         avg_loss = total_loss / len(loader)
         print(f"📊 Epoch {epoch+1}/{num_epochs} - Loss: {avg_loss:.4f} - LR: {scheduler.get_last_lr()[0]:.6f}")
 
-    torch.save(model.state_dict(), save_path)
-    print(f"✅ Model saved to {save_path}")
+        if avg_loss < best_loss:
+            best_loss = avg_loss
+            torch.save(model.state_dict(), save_path)
+            print(f"✅ Model improved & saved to {save_path}")
+
+    print(f"🏁 Training complete. Final model saved to {save_path}")
+
 
 if __name__ == "__main__":
     train_model(

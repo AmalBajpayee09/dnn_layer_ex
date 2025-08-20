@@ -24,7 +24,15 @@ def train_model(
 
     print("📁 Loading data...")
     _, X = load_dataset(trace_path, model_path, max_len=64)  # [N, 64, 10]
-    Y = load_labels(model_path, max_len=50)                  # [N, 50]
+    Y = load_labels(model_path, max_len=50)
+
+    # ✅ Ensure label count matches OPi count
+    if len(X) != len(Y):
+        min_len = min(len(X), len(Y))
+        print(f"⚠️ Warning: Mismatch in data size — trimming to {min_len}")
+        X = X[:min_len]
+        Y = Y[:min_len]
+
     print(f"✅ OPi: {X.shape} | Labels: {Y.shape}")
 
     dataset = TensorDataset(X, Y)

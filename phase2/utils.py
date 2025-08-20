@@ -3,7 +3,7 @@
 import json
 import torch
 from torch.nn.utils.rnn import pad_sequence
-from trace_simulator.simulate_kernel_trace import process_trace  # assumed implemented elsewhere
+from trace_simulator.simulate_kernel_trace import process_trace  # already implemented
 
 # 🔡 Vocabulary Tokens
 LAYER_TOKENS = [
@@ -18,16 +18,16 @@ PAD_IDX = TOKEN_TO_IDX["<PAD>"]
 EOS_IDX = TOKEN_TO_IDX["<EOS>"]
 VOCAB_SIZE = len(LAYER_TOKENS)
 
-
-# 🔒 Encode token sequence to index tensor
+# 🔒 Encode a layer sequence into token indices
 def encode_sequence(layer_list, max_len=50):
     ids = [TOKEN_TO_IDX.get(layer, PAD_IDX) for layer in layer_list]
-    ids.append(EOS_IDX)  # Append <EOS>
-    ids = ids[:max_len] + [PAD_IDX] * max(0, max_len - len(ids))  # Pad if needed
+    ids.append(EOS_IDX)  # Always append <EOS>
+    ids = ids[:max_len]  # Truncate if needed
+    if len(ids) < max_len:
+        ids += [PAD_IDX] * (max_len - len(ids))  # Pad to max_len
     return torch.tensor(ids, dtype=torch.long)
 
-
-# 🔓 Decode tensor to list of tokens
+# 🔓 Decode a token index tensor to readable sequence
 def decode_sequence(id_tensor):
     result = []
     for idx in id_tensor:
@@ -41,8 +41,7 @@ def decode_sequence(id_tensor):
             result.append(tok)
     return result
 
-
-# 📁 Load model labels from json
+# 📁 Load model labels as token index sequences
 def load_labels(model_json_path, max_len=50):
     with open(model_json_path) as f:
         models = json.load(f)
@@ -57,8 +56,7 @@ def load_labels(model_json_path, max_len=50):
 
     return torch.stack(encoded)
 
-
-# 🧪 Load processed traces and labels
+# 🧪 Load traces and labels as tensors
 def load_dataset(trace_path, model_path, max_len=50):
     with open(trace_path) as f:
         traces = json.load(f)
@@ -69,13 +67,12 @@ def load_dataset(trace_path, model_path, max_len=50):
 
     for trace, model in zip(traces, models):
         xt = process_trace(trace)
+        if xt is None or not isinstance(xt, torch.Tensor) or xt.size(0) == 0:
+            continue
         if "layers" not in model:
             continue
         layer_seq = [layer["type"].lower() for layer in model["layers"] if "type" in layer]
         yt = encode_sequence(layer_seq, max_len)
-
-        if xt is None or len(xt) == 0 or len(yt) == 0:
-            continue
 
         X_list.append(xt)
         Y_list.append(yt)

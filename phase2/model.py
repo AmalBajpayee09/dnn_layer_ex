@@ -32,7 +32,7 @@ class Attention(nn.Module):
         context = torch.sum(encoder_outputs * attn_weights, dim=1, keepdim=True)  # [B, 1, 2H]
         return context
 
-# 🧐 Phase2 Model
+# 🤨 Phase2 Model
 class Phase2Model(nn.Module):
     def __init__(self, input_dim=10, hidden_dim=256, num_layers=2, dropout=0.3):
         super().__init__()

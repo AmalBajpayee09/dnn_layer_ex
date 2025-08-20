@@ -4,7 +4,6 @@ import torch
 from phase1.model import Phase1Model
 from phase1.utils import NUM_OPS, load_dataset
 
-
 @torch.no_grad()
 def infer_opi(
     trace_path: str,
@@ -38,12 +37,12 @@ def infer_opi(
 
     outputs = []
 
-    # 🔄 Inference
+    # 🔄 Inference loop
     for i in range(0, len(X), batch_size):
         batch = X[i:i + batch_size].to(device)
         out = model(batch).cpu()  # [B, T, D]
         outputs.append(out)
 
-    # 🔗 Combine results
+    # 🔗 Concatenate all batches
     opi = torch.cat(outputs, dim=0)  # [N, T, D]
     return opi

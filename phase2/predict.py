@@ -8,10 +8,17 @@ from phase2.utils import load_labels
 from utils.evaluation import decode_sequence, compute_metrics
 from phase1.infer import infer_opi
 
-EOS_IDX = VOCAB_SIZE - 1  # EOS token index
+EOS_IDX = VOCAB_SIZE - 1  # <EOS> token index
+
 
 @torch.no_grad()
-def predict(trace_path, model_path, weights="phase2_trained.pth", max_len=50, batch_size=32):
+def predict(
+    trace_path,
+    model_path,
+    weights="phase2_trained.pth",
+    max_len=50,
+    batch_size=32
+):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     # 🔍 Step 1: Get OPi from Phase 1
@@ -19,7 +26,7 @@ def predict(trace_path, model_path, weights="phase2_trained.pth", max_len=50, ba
     true_labels = load_labels(model_path, max_len=max_len)
 
     input_dim = X.shape[-1]
-    print(f"📦 Initializing Phase 2 model with input_dim={input_dim}, hidden_dim=256")
+    print(f"📦 Phase2Model(input_dim={input_dim}, hidden_dim=256, num_layers=2)")
     model = Phase2Model(input_dim=input_dim, hidden_dim=256, num_layers=2, dropout=0.5).to(device)
     model.load_state_dict(torch.load(weights, map_location=device))
     model.eval()
@@ -30,9 +37,9 @@ def predict(trace_path, model_path, weights="phase2_trained.pth", max_len=50, ba
     predictions = []
 
     for batch in loader:
-        batch_x = batch[0].to(device)  # [B, T, D]
-        logits = model(batch_x)        # [B, max_len, VOCAB_SIZE]
-        pred_ids = logits.argmax(dim=-1).cpu()  # [B, max_len]
+        batch_x = batch[0].to(device)            # [B, T, D]
+        logits = model(batch_x)                  # [B, max_len, VOCAB_SIZE]
+        pred_ids = logits.argmax(dim=-1).cpu()   # [B, max_len]
 
         for seq in pred_ids:
             trimmed = []
@@ -40,19 +47,19 @@ def predict(trace_path, model_path, weights="phase2_trained.pth", max_len=50, ba
                 if tok.item() == EOS_IDX:
                     break
                 trimmed.append(tok.item())
-            predictions.append(trimmed)
+            predictions.append(torch.tensor(trimmed, dtype=torch.long))
 
     return predictions, true_labels
 
+
 if __name__ == "__main__":
-    # 🔁 Run inference
     preds, labels = predict(
         trace_path="data/traces/cnn_kernel_traces.json",
         model_path="generator/data/cnn_models.json",
         weights="phase2_trained.pth"
     )
 
-    # 🔤 Decode for viewing
+    # 🔤 Decode for inspection
     decoded_preds = [decode_sequence(p) for p in preds]
     decoded_labels = [decode_sequence(l.view(-1)) for l in labels]
 
@@ -68,11 +75,11 @@ if __name__ == "__main__":
             f.write(f"Predicted: {pred} | True: {label}\n")
     print("\n✅ Predictions saved to predictions.txt")
 
-    # 📊 Evaluation
+    # 📊 Evaluate
     ler, f1 = compute_metrics(preds, labels)
-    print(f"\n📈 Step 5: Evaluation Results:\nLayer Error Rate (LER): {ler:.2f}%\nF1 Score: {f1:.2f}%")
+    print(f"\n📈 Evaluation Results:\nLayer Error Rate (LER): {ler:.2f}%\nF1 Score: {f1:.2f}%")
 
-    # 💾 Save evaluation metrics
+    # 💾 Save metrics
     with open("metrics.txt", "w") as f:
         f.write(f"LER: {ler:.2f}%\nF1 Score: {f1:.2f}%\n")
     print("✅ Metrics saved to metrics.txt")

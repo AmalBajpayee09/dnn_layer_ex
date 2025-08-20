@@ -26,7 +26,7 @@ def simulate_trace(layers):
     timestamp = 0.0
 
     for i, layer in enumerate(layers):
-        op_type = layer["type"]
+        op_type = layer.get("type", "unknown").lower()
         duration = round(random.uniform(0.001, 0.01), 5)
 
         trace.append({
@@ -36,11 +36,12 @@ def simulate_trace(layers):
             "end_time": round(timestamp + duration, 5),
             "duration": duration
         })
+
         timestamp += duration
 
     return trace
 
-# 📦 Generate and save all traces
+# 📦 Generate and save all traces from a model JSON
 def generate_traces(model_path, trace_path):
     with open(model_path) as f:
         models = json.load(f)
@@ -56,14 +57,6 @@ def generate_traces(model_path, trace_path):
         json.dump(all_traces, f, indent=2)
 
     print(f"✅ Traces generated → {trace_path}")
-
-# 🚀 Entry Point
-def main():
-    generate_traces(CNN_MODEL_PATH, CNN_TRACE_PATH)
-    generate_traces(RNN_MODEL_PATH, RNN_TRACE_PATH)
-
-if __name__ == "__main__":
-    main()
 
 # 🔧 Convert raw trace to tensor for model input
 def process_trace(trace):
@@ -102,3 +95,11 @@ def process_trace(trace):
         return None
 
     return torch.tensor(ops, dtype=torch.float32)
+
+# 🚀 Entry Point
+def main():
+    generate_traces(CNN_MODEL_PATH, CNN_TRACE_PATH)
+    generate_traces(RNN_MODEL_PATH, RNN_TRACE_PATH)
+
+if __name__ == "__main__":
+    main()

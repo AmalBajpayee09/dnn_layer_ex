@@ -1,28 +1,93 @@
 [
   [
-    { "kernel": "resnet_kernel_0", "op": "resnet", "start_time": 0.00000, "end_time": 0.00320, "duration": 0.00320 },
-    { "kernel": "resnet_kernel_1", "op": "resnet", "start_time": 0.00320, "end_time": 0.00680, "duration": 0.00360 },
-    { "kernel": "mobilenet_kernel_2", "op": "mobilenet", "start_time": 0.00680, "end_time": 0.00900, "duration": 0.00220 },
-    { "kernel": "tanh_kernel_3", "op": "tanh", "start_time": 0.00900, "end_time": 0.01250, "duration": 0.00350 },
-    { "kernel": "conv_kernel_4", "op": "conv", "start_time": 0.01250, "end_time": 0.01480, "duration": 0.00230 },
-    { "kernel": "tanh_kernel_5", "op": "tanh", "start_time": 0.01480, "end_time": 0.01790, "duration": 0.00310 },
-    { "kernel": "resnet_kernel_6", "op": "resnet", "start_time": 0.01790, "end_time": 0.02110, "duration": 0.00320 },
-    { "kernel": "tanh_kernel_7", "op": "tanh", "start_time": 0.02110, "end_time": 0.02400, "duration": 0.00290 },
-    { "kernel": "resnet_kernel_8", "op": "resnet", "start_time": 0.02400, "end_time": 0.02760, "duration": 0.00360 },
-    { "kernel": "mobilenet_kernel_9", "op": "mobilenet", "start_time": 0.02760, "end_time": 0.03010, "duration": 0.00250 },
-    { "kernel": "batchnorm_kernel_10", "op": "batchnorm", "start_time": 0.03010, "end_time": 0.03300, "duration": 0.00290 },
-    { "kernel": "pool_kernel_11", "op": "pool", "start_time": 0.03300, "end_time": 0.03520, "duration": 0.00220 },
-    { "kernel": "conv_kernel_12", "op": "conv", "start_time": 0.03520, "end_time": 0.03850, "duration": 0.00330 },
-    { "kernel": "tanh_kernel_13", "op": "tanh", "start_time": 0.03850, "end_time": 0.04140, "duration": 0.00290 },
-    { "kernel": "resnet_kernel_14", "op": "resnet", "start_time": 0.04140, "end_time": 0.04500, "duration": 0.00360 },
-    { "kernel": "pool_kernel_15", "op": "pool", "start_time": 0.04500, "end_time": 0.04720, "duration": 0.00220 },
-    { "kernel": "mobilenet_kernel_16", "op": "mobilenet", "start_time": 0.04720, "end_time": 0.05050, "duration": 0.00330 },
-    { "kernel": "mobilenet_kernel_17", "op": "mobilenet", "start_time": 0.05050, "end_time": 0.05300, "duration": 0.00250 },
-    { "kernel": "conv_kernel_18", "op": "conv", "start_time": 0.05300, "end_time": 0.05640, "duration": 0.00340 },
-    { "kernel": "tanh_kernel_19", "op": "tanh", "start_time": 0.05640, "end_time": 0.05890, "duration": 0.00250 },
-    { "kernel": "conv_kernel_20", "op": "conv", "start_time": 0.05890, "end_time": 0.06200, "duration": 0.00310 },
-    { "kernel": "tanh_kernel_21", "op": "tanh", "start_time": 0.06200, "end_time": 0.06480, "duration": 0.00280 },
-    { "kernel": "softmax_kernel_22", "op": "softmax", "start_time": 0.06480, "end_time": 0.06790, "duration": 0.00310 },
-    { "kernel": "fc_kernel_23", "op": "fc", "start_time": 0.06790, "end_time": 0.07000, "duration": 0.00210 }
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.006, "duration": 0.006 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.006, "end_time": 0.009, "duration": 0.003 },
+    { "kernel": "pool_kernel_2", "op": "pool", "start_time": 0.009, "end_time": 0.012, "duration": 0.003 },
+    { "kernel": "conv_kernel_3", "op": "conv", "start_time": 0.012, "end_time": 0.018, "duration": 0.006 },
+    { "kernel": "relu_kernel_4", "op": "relu", "start_time": 0.018, "end_time": 0.021, "duration": 0.003 },
+    { "kernel": "pool_kernel_5", "op": "pool", "start_time": 0.021, "end_time": 0.024, "duration": 0.003 },
+    { "kernel": "flatten_kernel_6", "op": "flatten", "start_time": 0.024, "end_time": 0.027, "duration": 0.003 },
+    { "kernel": "fc_kernel_7", "op": "fc", "start_time": 0.027, "end_time": 0.03, "duration": 0.003 },
+    { "kernel": "softmax_kernel_8", "op": "softmax", "start_time": 0.03, "end_time": 0.032, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.005, "duration": 0.005 },
+    { "kernel": "batchnorm_kernel_1", "op": "batchnorm", "start_time": 0.005, "end_time": 0.008, "duration": 0.003 },
+    { "kernel": "relu_kernel_2", "op": "relu", "start_time": 0.008, "end_time": 0.011, "duration": 0.003 },
+    { "kernel": "conv_kernel_3", "op": "conv", "start_time": 0.011, "end_time": 0.016, "duration": 0.005 },
+    { "kernel": "batchnorm_kernel_4", "op": "batchnorm", "start_time": 0.016, "end_time": 0.019, "duration": 0.003 },
+    { "kernel": "relu_kernel_5", "op": "relu", "start_time": 0.019, "end_time": 0.022, "duration": 0.003 },
+    { "kernel": "pool_kernel_6", "op": "pool", "start_time": 0.022, "end_time": 0.025, "duration": 0.003 },
+    { "kernel": "flatten_kernel_7", "op": "flatten", "start_time": 0.025, "end_time": 0.028, "duration": 0.003 },
+    { "kernel": "fc_kernel_8", "op": "fc", "start_time": 0.028, "end_time": 0.031, "duration": 0.003 },
+    { "kernel": "softmax_kernel_9", "op": "softmax", "start_time": 0.031, "end_time": 0.033, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.006, "duration": 0.006 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.006, "end_time": 0.009, "duration": 0.003 },
+    { "kernel": "pool_kernel_2", "op": "pool", "start_time": 0.009, "end_time": 0.012, "duration": 0.003 },
+    { "kernel": "fc_kernel_3", "op": "fc", "start_time": 0.012, "end_time": 0.015, "duration": 0.003 },
+    { "kernel": "relu_kernel_4", "op": "relu", "start_time": 0.015, "end_time": 0.018, "duration": 0.003 },
+    { "kernel": "fc_kernel_5", "op": "fc", "start_time": 0.018, "end_time": 0.021, "duration": 0.003 },
+    { "kernel": "softmax_kernel_6", "op": "softmax", "start_time": 0.021, "end_time": 0.023, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.005, "duration": 0.005 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.005, "end_time": 0.008, "duration": 0.003 },
+    { "kernel": "residual_kernel_2", "op": "residual", "start_time": 0.008, "end_time": 0.012, "duration": 0.004 },
+    { "kernel": "conv_kernel_3", "op": "conv", "start_time": 0.012, "end_time": 0.017, "duration": 0.005 },
+    { "kernel": "relu_kernel_4", "op": "relu", "start_time": 0.017, "end_time": 0.02, "duration": 0.003 },
+    { "kernel": "residual_kernel_5", "op": "residual", "start_time": 0.02, "end_time": 0.024, "duration": 0.004 },
+    { "kernel": "pool_kernel_6", "op": "pool", "start_time": 0.024, "end_time": 0.027, "duration": 0.003 },
+    { "kernel": "fc_kernel_7", "op": "fc", "start_time": 0.027, "end_time": 0.03, "duration": 0.003 },
+    { "kernel": "softmax_kernel_8", "op": "softmax", "start_time": 0.03, "end_time": 0.032, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "mobilenet_kernel_0", "op": "mobilenet", "start_time": 0.0, "end_time": 0.01, "duration": 0.01 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.01, "end_time": 0.013, "duration": 0.003 },
+    { "kernel": "pool_kernel_2", "op": "pool", "start_time": 0.013, "end_time": 0.016, "duration": 0.003 },
+    { "kernel": "flatten_kernel_3", "op": "flatten", "start_time": 0.016, "end_time": 0.019, "duration": 0.003 },
+    { "kernel": "fc_kernel_4", "op": "fc", "start_time": 0.019, "end_time": 0.022, "duration": 0.003 },
+    { "kernel": "softmax_kernel_5", "op": "softmax", "start_time": 0.022, "end_time": 0.024, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.006, "duration": 0.006 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.006, "end_time": 0.009, "duration": 0.003 },
+    { "kernel": "depthwise_kernel_2", "op": "depthwise", "start_time": 0.009, "end_time": 0.012, "duration": 0.003 },
+    { "kernel": "relu_kernel_3", "op": "relu", "start_time": 0.012, "end_time": 0.015, "duration": 0.003 },
+    { "kernel": "pool_kernel_4", "op": "pool", "start_time": 0.015, "end_time": 0.018, "duration": 0.003 },
+    { "kernel": "flatten_kernel_5", "op": "flatten", "start_time": 0.018, "end_time": 0.021, "duration": 0.003 },
+    { "kernel": "fc_kernel_6", "op": "fc", "start_time": 0.021, "end_time": 0.024, "duration": 0.003 },
+    { "kernel": "softmax_kernel_7", "op": "softmax", "start_time": 0.024, "end_time": 0.026, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.005, "duration": 0.005 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.005, "end_time": 0.008, "duration": 0.003 },
+    { "kernel": "conv_kernel_2", "op": "conv", "start_time": 0.008, "end_time": 0.013, "duration": 0.005 },
+    { "kernel": "relu_kernel_3", "op": "relu", "start_time": 0.013, "end_time": 0.016, "duration": 0.003 },
+    { "kernel": "flatten_kernel_4", "op": "flatten", "start_time": 0.016, "end_time": 0.019, "duration": 0.003 },
+    { "kernel": "fc_kernel_5", "op": "fc", "start_time": 0.019, "end_time": 0.022, "duration": 0.003 },
+    { "kernel": "softmax_kernel_6", "op": "softmax", "start_time": 0.022, "end_time": 0.024, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.005, "duration": 0.005 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.005, "end_time": 0.008, "duration": 0.003 },
+    { "kernel": "conv_kernel_2", "op": "conv", "start_time": 0.008, "end_time": 0.013, "duration": 0.005 },
+    { "kernel": "relu_kernel_3", "op": "relu", "start_time": 0.013, "end_time": 0.016, "duration": 0.003 },
+    { "kernel": "conv_kernel_4", "op": "conv", "start_time": 0.016, "end_time": 0.021, "duration": 0.005 },
+    { "kernel": "relu_kernel_5", "op": "relu", "start_time": 0.021, "end_time": 0.024, "duration": 0.003 },
+    { "kernel": "flatten_kernel_6", "op": "flatten", "start_time": 0.024, "end_time": 0.027, "duration": 0.003 },
+    { "kernel": "fc_kernel_7", "op": "fc", "start_time": 0.027, "end_time": 0.03, "duration": 0.003 },
+    { "kernel": "softmax_kernel_8", "op": "softmax", "start_time": 0.03, "end_time": 0.032, "duration": 0.002 }
+  ],
+  [
+    { "kernel": "conv_kernel_0", "op": "conv", "start_time": 0.0, "end_time": 0.006, "duration": 0.006 },
+    { "kernel": "relu_kernel_1", "op": "relu", "start_time": 0.006, "end_time": 0.009, "duration": 0.003 },
+    { "kernel": "pool_kernel_2", "op": "pool", "start_time": 0.009, "end_time": 0.012, "duration": 0.003 },
+    { "kernel": "flatten_kernel_3", "op": "flatten", "start_time": 0.012, "end_time": 0.015, "duration": 0.003 },
+    { "kernel": "fc_kernel_4", "op": "fc", "start_time": 0.015, "end_time": 0.018, "duration": 0.003 },
+    { "kernel": "relu_kernel_5", "op": "relu", "start_time": 0.018, "end_time": 0.021, "duration": 0.003 },
+    { "kernel": "fc_kernel_6", "op": "fc", "start_time": 0.021, "end_time": 0.024, "duration": 0.003 },
+    { "kernel": "softmax_kernel_7", "op": "softmax", "start_time": 0.024, "end_time": 0.026, "duration": 0.002 }
   ]
 ]

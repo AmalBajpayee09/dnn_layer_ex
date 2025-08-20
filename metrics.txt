@@ -1,2 +1,2 @@
-Layer Error Rate (LER): 61.90%
-F1 Score: 42.86%
+Layer Error Rate (LER): 50.87%
+F1 Score: 35.56%

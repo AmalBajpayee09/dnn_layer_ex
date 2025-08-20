@@ -4,17 +4,18 @@ import json
 import os
 import torch
 from torchvision.models import resnet18
-from tvm import relay, runtime
+from tvm import relay
 import tvm
 
 def optimize_model(input_path=None, output_path=None):
     """
-    Optimizes CNN models using TVM. If no input_path is given, defaults to ResNet18.
-    Otherwise, loads CNN models from a JSON and re-saves (mock optimized).
+    Optimizes CNN models using TVM.
+    - If input_path is None: optimize a demo ResNet18 model.
+    - Else: load CNN JSON model list and (mock) optimize them.
     """
-    
+
     if input_path is None:
-        # 🔧 Optimize ResNet18 using TVM for testing
+        # 🔧 TVM Optimization for ResNet18 (demo only)
         model = resnet18(pretrained=False)
         model.eval()
 
@@ -22,7 +23,7 @@ def optimize_model(input_path=None, output_path=None):
         scripted_model = torch.jit.trace(model, input_data)
         shape_list = [("input", input_data.shape)]
 
-        # 📦 Convert to Relay
+        # 📦 Convert PyTorch to TVM Relay
         mod, params = relay.frontend.from_pytorch(scripted_model, shape_list)
 
         # 🛠️ Compile with TVM
@@ -30,26 +31,26 @@ def optimize_model(input_path=None, output_path=None):
         with tvm.transform.PassContext(opt_level=3):
             lib = relay.build(mod, target=target, params=params)
 
-        print("✅ Optimized resnet18 using TVM (demo mode)")
+        print("✅ Optimized ResNet18 using TVM (demo)")
         return
 
-    # 📂 Optimize (mock) CNN JSON model structure
+    # 📂 Optimize (mock) JSON CNN models
     if not os.path.exists(input_path):
-        raise FileNotFoundError(f"Input model file not found: {input_path}")
+        raise FileNotFoundError(f"❌ Input model file not found: {input_path}")
 
     with open(input_path, "r") as f:
         models = json.load(f)
 
-    # 🔄 Place for TVM per-model optimization (future scope)
+    # 🔄 Placeholder: TVM compile per model if needed
+    # This is a mock optimization loop
 
-    # 💾 Save as optimized
     if output_path is None:
         output_path = input_path.replace(".json", "_optimized.json")
 
     with open(output_path, "w") as f:
         json.dump(models, f, indent=2)
 
-    print(f"✅ Models re-saved as optimized → {output_path}")
+    print(f"✅ Mock optimized models saved → {output_path}")
 
 
 if __name__ == "__main__":
